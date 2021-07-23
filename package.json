@@ -1,0 +1,19 @@
+{
+  "name": "assignment-tracker",
+  "version": "1.0.0",
+  "description": "Assignment tracking application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mishawali/Project-2-Assignment-tracker.git"
+  },
+  "author": "Misha",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mishawali/Project-2-Assignment-tracker/issues"
+  },
+  "homepage": "https://github.com/mishawali/Project-2-Assignment-tracker#readme"
+}
