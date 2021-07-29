@@ -17,9 +17,11 @@
   },
   "homepage": "https://github.com/mishawali/Project-2-Assignment-tracker#readme",
   "dependencies": {
+    "cookie-session": "^1.4.0",
     "express": "^4.17.1",
     "express-handlebars": "^5.3.2",
     "mongodb": "^4.0.1",
-    "passport": "^0.4.1"
+    "passport": "^0.4.1",
+    "passport-github2": "^0.1.12"
   }
 }
