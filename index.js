@@ -36,10 +36,19 @@ app.get('/home',isLoggedIn,(req,res)=>{
     res.render('home.hbs');
 
 })
+app.get('/createtask',isLoggedIn,(req,res)=>{
+    res.render('createtask.hbs');
+})
+app.get('/viewtasks',isLoggedIn,(req,res)=>{
+    res.render('viewtasks.hbs');
+})
+app.get('/deletetask',isLoggedIn,(req,res)=>{
+    res.render('deletetask.hbs');
+})
 app.get('/logout', (req, res) => {
   req.session = null;
   req.logout();
-  res.redirect('/auth/github');
+  res.redirect('/');
 })
 app.listen(8000,()=>{
 console.log('Serve is up and running at the port 8000')
