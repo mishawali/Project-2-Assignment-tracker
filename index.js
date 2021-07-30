@@ -1,13 +1,18 @@
 const express = require('express')
 const app = express()
+const hbs = require('hbs');
+const path    = require('path')
 const cookieSession = require('cookie-session')
 const passport = require('passport');
 const isLoggedIn = require('./middleware/auth');
 require('./passport')
+app.set('viewengine','hbs');
+app.set('views', path.join(__dirname, 'views'));
 app.use(cookieSession({
   name: 'github-auth-session',
   keys: ['key1', 'key2']
 }))
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
 app.use(passport.session());
 app.get('/auth/error', (req, res) => res.send('Unknown Error'))
@@ -17,9 +22,19 @@ function(req, res) {
   res.redirect('/');
 });
 
+hbs.registerPartials(__dirname+'/views/partials')
+app.get('/',(req,res,next)=>{
+    let data = {
+        layout: false
+      }
+  res.render('login.hbs',data);
+})
+app.get('/github',(req,res)=>{
+    res.redirect('/home');
+})
+app.get('/home',isLoggedIn,(req,res)=>{
+    res.render('home.hbs');
 
-app.get('/',isLoggedIn,(req,res)=>{
-  res.send("Hello");
 })
 app.get('/logout', (req, res) => {
   req.session = null;
