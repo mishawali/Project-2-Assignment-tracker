@@ -2,9 +2,39 @@
 <html>
     <head>
         <title>Home Page</title>
+         <!--  jQuery -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+    <!-- Isolated Version of Bootstrap, not needed if your site already uses Bootstrap -->
+    <link rel="stylesheet" href="https://formden.com/static/cdn/bootstrap-iso.css" />
 
     </head>
     <body>
-        <p>Hello</p>
+        <p>Hello {{userdata.name}}</p>
+        <img src={{userdata.image}}>
+        <h2>Asignments currently added</h2>
+        <table class="table table-light table-striped table-bordered table-hover">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Task name</th>
+                <th scope="col">Task Description</th>
+                <th scope="col">Task Course</th>
+                <th scope="col">Task Date</th>
+            </tr>
+        </thead>
+        <tbody>
+           
+                {{#each userdata.tasks}}
+                    <tr>
+                    <td>{{name}}</td>
+                    <td>{{description}}</td>
+                    <td>{{taskcourse}}</td>
+                    <td>{{taskdate}}</td>
+                    </tr>
+                 {{/each}}
+
+
+        </tbody>
+    </table>
     </body>
 </html>
