@@ -1,10 +1,16 @@
-const express = require('express')
+const express = require('express');
+const { MongoClient } = require("mongodb");
 const app = express()
 const hbs = require('hbs');
 const path    = require('path')
+const bodyParser 		= require('body-parser');
 const cookieSession = require('cookie-session')
 const passport = require('passport');
 const isLoggedIn = require('./middleware/auth');
+const config = require('./db/config.json');
+const uri = config.db.uri;
+const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+app.use(express.static('views'));
 require('./passport')
 app.set('viewengine','hbs');
 app.set('views', path.join(__dirname, 'views'));
@@ -12,6 +18,10 @@ app.use(cookieSession({
   name: 'github-auth-session',
   keys: ['key1', 'key2']
 }))
+app.use(express.urlencoded());
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -50,6 +60,33 @@ app.get('/logout', (req, res) => {
   req.logout();
   res.redirect('/');
 })
+
+app.post('/createtask',(req,res)=>{
+  var taskname  = req.body.taskname;
+  var desc      = req.body.taskdesc;
+  var course    = req.body.taskcourse;
+  var date      = req.body.date;
+  const record = {name:taskname,description:desc,taskcourse:course,taskdate:date};
+  InsertTask(record).catch(console.dir);
+  res.redirect('/viewtasks');
+})
 app.listen(8000,()=>{
 console.log('Serve is up and running at the port 8000')
 })
+
+async function InsertTask(record) {
+  try {
+    await client.connect();
+
+    const database = client.db("taskdb");
+    const movies = database.collection("tasks");
+    // create a document to be inserted
+    const result = await movies.insertOne(record);
+
+    console.log(
+      `${result.insertedCount} documents were inserted with the _id: ${result.insertedId}`,
+    );
+  } finally {
+    await client.close();
+  }
+}
