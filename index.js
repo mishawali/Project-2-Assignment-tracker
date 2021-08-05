@@ -1,5 +1,6 @@
 const express = require('express');
 const { MongoClient } = require("mongodb");
+const mongo = require("mongodb");
 const app = express()
 const hbs = require('hbs');
 const path = require('path')
@@ -22,7 +23,7 @@ app.use(express.urlencoded());
 app.use(bodyParser.urlencoded({
   extended: true
 }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use('/js', express.static(__dirname + '/js'));
 app.use(passport.initialize());
 app.use(passport.session());
 app.get('/auth/error', (req, res) => res.send('Unknown Error'))
@@ -54,6 +55,10 @@ app.get('/viewtasks',async(req, res) => {
   res.render('viewtasks.hbs',{tasks:tasks});
   
 })
+app.get('/edittask', async(req,res)=>{
+  var tasks = await Listtasks();
+  res.render('edittask.hbs',{tasks:tasks});
+})
 app.get('/deletetask', isLoggedIn, (req, res) => {
   res.render('deletetask.hbs');
 })
@@ -72,9 +77,13 @@ app.post('/createtask', (req, res) => {
   InsertTask(record).catch(console.dir);
   res.redirect('/viewtasks');
 })
-app.listen(8000, () => {
-  console.log('Serve is up and running at the port 8000')
+
+app.post('/gettaskdetail',async(req,res)=>{
+  var taskid = req.body.id;
+  var detail = await GettaskDetail(taskid);
+  res.send(JSON.stringify(detail));
 })
+
 
 async function InsertTask(record) {
   try {
@@ -106,3 +115,21 @@ async function Listtasks() {
   }
 
 }
+
+async function GettaskDetail(taskid){
+  try{
+    await client.connect();
+    const database = client.db("taskdb");
+    var o_id = new mongo.ObjectId(taskid);
+    const data = await database.collection("tasks").findOne({'_id': o_id});
+   return data;
+
+  }finally{
+    await client.close();
+  }
+}
+
+
+app.listen(8000, () => {
+  console.log('Serve is up and running at the port 8000')
+})
