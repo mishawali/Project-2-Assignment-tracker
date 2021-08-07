@@ -24,8 +24,8 @@ passport.serializeUser(function(user, done) {
     done(null, user);
   });
   passport.use(new FacebookStrategy({
-    clientID: "611015742909469",
-    clientSecret: "757**********************bed",
+    clientID: "206759228063159",
+    clientSecret: "44025bbcc1669bc74f2f887eb5e2adab",
     callbackURL: "http://localhost:8000/auth/facebook/callback"
   },
   function(accessToken, refreshToken, profile, done) {
